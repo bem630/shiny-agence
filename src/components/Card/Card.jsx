@@ -12,7 +12,7 @@ export default function Card({ label, title, picture }) {
 }
 
 Card.PropTypes = {
-    label: PropTypes.string,
-    title: PropTypes.string,
-    picture: PropTypes.string,
+    label: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    picture: PropTypes.string.isRequired,
 }
