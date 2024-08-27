@@ -1,4 +1,4 @@
-import DefaultPicture from '../assets/profile.jpg'
+import DefaultPicture from '../assets/profile.png'
 
 export const freelanceProfiles = [
     {
