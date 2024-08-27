@@ -1,7 +1,11 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
   return (
-    <div>Header</div>
+    <nav>
+        <Link to="/">Accueil</Link>
+        <Link to="/survey">Questionnaire</Link>
+    </nav>
   )
 }
