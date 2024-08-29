@@ -1,8 +1,8 @@
-import React from 'react'
 import Card from '../../Card/Card'
-import { freelanceProfiles } from '../../../data/fakeData'
-import styled from 'styled-components';
-import colors from '../../../utils/style/colors';
+import styled from 'styled-components'
+import colors from '../../../utils/style/colors'
+import { Loader } from '../../../utils/style/Atoms'
+import { useFetch, useTheme } from '../../../utils/hooks'
 
 const CardsContainer = styled.div`
   display: grid;
@@ -15,9 +15,9 @@ const CardsContainer = styled.div`
 
 const PageTitle = styled.h1`
   font-size: 30px;
-  color: black;
   text-align: center;
   padding-bottom: 30px;
+  color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')};
 `
 
 const PageSubtitle = styled.h2`
@@ -26,27 +26,53 @@ const PageSubtitle = styled.h2`
   font-weight: 300;
   text-align: center;
   padding-bottom: 30px;
+  color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')};
 `
 
-export default function Freelances() {
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+function Freelances() {
+  const { theme } = useTheme()
+  const { data, isLoading, error } = useFetch(
+    `http://localhost:8000/freelances`
+  )
+
+  // Ici le "?" permet de s'assurer que data existe bien.
+  // Vous pouvez en apprendre davantage sur cette notation ici :
+  // https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+  const freelancersList = data?.freelancersList
+
+  if (error) {
+    return <span>Oups il y a eu un problème</span>
+  }
+
   return (
     <div>
-      <PageTitle>Trouvez votre prestataire</PageTitle>
-      <PageSubtitle>
+      <PageTitle theme={theme}>Trouvez votre prestataire</PageTitle>
+      <PageSubtitle theme={theme}>
         Chez Shiny nous réunissons les meilleurs profils pour vous.
       </PageSubtitle>
-      <CardsContainer>
-        {
-          freelanceProfiles.map(({id,jobTitle,picture,name}) => (
+      {isLoading ? (
+        <LoaderWrapper>
+          <Loader theme={theme} />
+        </LoaderWrapper>
+      ) : (
+        <CardsContainer>
+          {freelancersList.map((profile, index) => (
             <Card
-              key={id}
-              label={jobTitle}
-              picture={picture}
-              title={name}
+              key={`${profile.name}-${index}`}
+              label={profile.job}
+              title={profile.name}
+              picture={profile.picture}
             />
-          ) )
-        }
-      </CardsContainer>
+          ))}
+        </CardsContainer>
+      )}
     </div>
   )
 }
+
+export default Freelances
